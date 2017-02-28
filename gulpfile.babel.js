@@ -31,7 +31,10 @@ gulp.task('compile-mobx', () => {
     .pipe(sourcemaps.init({largeFile: true}))
     .pipe(babel({
       presets: ['es2015'],
-      plugins: ['transform-runtime']
+      plugins: [
+        'transform-runtime',
+        ['import', { libraryName: 'antd' }]
+      ]
     }))
     .pipe(sourcemaps.write('../maps'))
     .pipe(gulp.dest('public/javascripts/mbox-dist'))
