@@ -1,7 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react'
 import ReactThree from 'react-three'
-import THREE from 'three'
+import * as THREE from 'three'
 
 let meshFactory = React.createFactory(ReactThree.Mesh)
 
@@ -18,21 +18,20 @@ let meshFactory = React.createFactory(ReactThree.Mesh)
       aspect: aspectRatio,
       near: 1,
       far: 5000,
-      position: new THREE.Vector3(0, 0, 600),
+      position: new THREE.Vector3(0, 600, 600),
       lookat: new THREE.Vector3(0, 0, 0)
     }
 
     return (
-      <Renderer width = {widtch} height = {height}>
-        <Scene width = {width} height = {height} camera = 'maincamera'>
-          <PerspectiveCamera name = "maincamera" {...cameraProps} />
-            <Object3D 
-              quaternion = {this.props.quaternion} 
-              position = {this.props.position || new THREE.Vector3(0,0,0)} >
-              { meshFactory({position: new Vector3(0, -100, 0), geometry: geometry, material: material}) }
-            </Object3D>
-        </Scene>
-      </Renderer>
+      <ReactThree.Renderer width = {width} height = {height}>
+        <ReactThree.Scene width = {width} height = {height} camera = 'maincamera'>
+          <ReactThree.PerspectiveCamera name = "maincamera" {...cameraProps} />
+            <ReactThree.Object3D 
+              position = {this.props.position || new THREE.Vector3(0, 0, 0)} >
+              { meshFactory({position: new THREE.Vector3(0, 0, 0), geometry: geometry, material: material}) }
+            </ReactThree.Object3D>
+        </ReactThree.Scene>
+      </ReactThree.Renderer>
     )
   }
 }
