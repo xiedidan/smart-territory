@@ -38,3 +38,8 @@ jspm_packages
 
 # Editor
 .vscode
+
+# outputs
+public/javascripts/mobx-dist
+routes
+express-dist
