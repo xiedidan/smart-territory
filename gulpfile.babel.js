@@ -3,6 +3,10 @@ import babel from 'gulp-babel'
 import sourcemaps from 'gulp-sourcemaps'
 import clean from 'gulp-clean'
 import sequence from 'gulp-sequence'
+import rename from 'gulp-rename'
+import browserify from 'browserify'
+import babelify from 'babelify'
+import source from 'vinyl-source-stream'
 
 // compiling tasks
 gulp.task('build', sequence('clean', 'compile'))
@@ -27,17 +31,23 @@ gulp.task('compile-routes', () => {
 })
 
 gulp.task('compile-mobx', () => {
-  return gulp.src('mobx-src/**/*.js')
-    .pipe(sourcemaps.init({largeFile: true}))
-    .pipe(babel({
-      presets: ['es2015'],
+  let bundler = browserify({
+    entries: ['./mobx-src/Entry.js'],
+    debug: true
+  })
+
+  bundler.transform(babelify, {
+      presets: ["es2015", "react"],
       plugins: [
+        'transform-decorators-legacy',
         'transform-runtime',
         ['import', { libraryName: 'antd' }]
       ]
-    }))
-    .pipe(sourcemaps.write('../maps'))
-    .pipe(gulp.dest('public/javascripts/mbox-dist'))
+    })
+    .bundle()
+    .pipe(source('./mobx-src/Entry.js'))
+    .pipe(rename({dirname: ''}))
+    .pipe(gulp.dest('./public/javascripts/mobx-dist/'))
 })
 
 // cleaning tasks
@@ -54,7 +64,7 @@ gulp.task('clean-routes', () => {
 })
 
 gulp.task('clean-mobx', () => {
-  return gulp.src('public/javascripts/mbox-dist/**/*.js', {read: false})
+  return gulp.src('public/javascripts/mobx-dist/**/*.js', {read: false})
     .pipe(clean())
 })
 
