@@ -4,9 +4,15 @@ import sourcemaps from 'gulp-sourcemaps'
 import clean from 'gulp-clean'
 import sequence from 'gulp-sequence'
 import rename from 'gulp-rename'
+import uglify from 'gulp-uglify'
 import browserify from 'browserify'
 import babelify from 'babelify'
 import source from 'vinyl-source-stream'
+import buffer from 'vinyl-buffer'
+
+// set env to production for react production build
+// envify doesn't work here
+process.env.NODE_ENV = 'production'
 
 // compiling tasks
 gulp.task('build', sequence('clean', 'compile'))
@@ -36,16 +42,20 @@ gulp.task('compile-mobx', () => {
     debug: true
   })
 
-  bundler.transform(babelify, {
+  bundler
+    .transform(babelify, {
       presets: ["es2015", "react"],
       plugins: [
         'transform-decorators-legacy',
         'transform-runtime',
+        'transform-class-properties',
         ['import', { libraryName: 'antd' }]
       ]
     })
     .bundle()
     .pipe(source('./mobx-src/Entry.js'))
+    .pipe(buffer())
+    .pipe(uglify())
     .pipe(rename({dirname: ''}))
     .pipe(gulp.dest('./public/javascripts/mobx-dist/'))
 })
