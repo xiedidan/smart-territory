@@ -13,8 +13,7 @@ let meshFactory = React.createFactory(ReactThree.Mesh)
     const envLight = this.props.envLight
     const width = this.props.width
     const height = this.props.height
-
-    let raycaster = new THREE.Raycaster()
+    const quaternion = this.props.quaternion
 
     let aspectRatio = width / height
     let cameraProps = {
@@ -33,7 +32,8 @@ let meshFactory = React.createFactory(ReactThree.Mesh)
           {light}
           {envLight}
           <ReactThree.Object3D 
-            position = {this.props.position || new THREE.Vector3(0, 0, 0)} >
+            position = {new THREE.Vector3(0, 0, 0)}
+            quaternion = {quaternion} >
             { meshFactory({position: new THREE.Vector3(0, 0, 0), geometry: geometry, material: material}) }
           </ReactThree.Object3D>
         </ReactThree.Scene>
