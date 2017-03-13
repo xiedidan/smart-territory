@@ -13,6 +13,9 @@ import buffer from 'vinyl-buffer'
 // set env to production for react production build
 // envify doesn't work here
 process.env.NODE_ENV = 'production'
+process.on('uncaughtException', function(err) {
+	console.error('Error caught in uncaughtException event:', err);
+})
 
 // compiling tasks
 gulp.task('build', sequence('clean', 'compile'))
@@ -42,7 +45,7 @@ gulp.task('compile-mobx', () => {
     debug: true
   })
 
-  bundler
+  return bundler
     .transform(babelify, {
       presets: ["es2015", "react"],
       plugins: [

@@ -11,6 +11,8 @@ json = json.reduce((acc, val, idx) => {
 
     if (Math.abs(acc[index].z) < 20)
       acc[index].z *= -1
+    else
+      console.log(acc[index].z)
   }
   else {
     // push self to acc
@@ -33,11 +35,27 @@ let yMid = sums.y / sums.c
 
 console.log('xMid', xMid, 'yMid', yMid, 'count', sums.c)
 
+let xMax = 0.0
+let xMin = 0.0
+let yMax = 0.0
+let yMin = 0.0
+
 json = json.map((val, idx) => {
   val.x -= xMid
   val.y -= yMid
 
+  if (xMax < val.x)
+    xMax = val.x
+  if (xMin > val.x)
+    xMin = val.x
+  if (yMax < val.y)
+    yMax = val.y
+  if (yMin > val.y)
+    yMin = val.y
+
   return val
 })
+
+console.log('xMax', xMax, 'xMin', xMin, 'yMax', yMax, 'yMin', yMin)
 
 console.log(JSON.stringify(json))
