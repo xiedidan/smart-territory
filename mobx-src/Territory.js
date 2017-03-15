@@ -24,8 +24,15 @@ class Territory {
 
     // create material
     this.phongMaterial = new THREE.MeshLambertMaterial({ 
-	  color: 0x7f7f7f,
+	    color: 0x9b986c,
       emissive: 0x2f2f2f, 
+      side: THREE.DoubleSide
+	  })
+    this.waterMaterial = new THREE.MeshLambertMaterial({ 
+	    color: 0x2194ce,
+      emissive: 0x2f2f2f, 
+      transparent: true,
+      opacity: 0.7,
       side: THREE.DoubleSide
 	  })
 
@@ -41,6 +48,13 @@ class Territory {
     this.terrainMesh = new THREE.Mesh(this.planeGeo, this.phongMaterial) 
     // this.boxMesh = new THREE.Mesh(new THREE.BoxGeometry(400, 400, 400), this.phongMaterial)
 
+    this.waterGeo = new THREE.PlaneGeometry(1200, 1000, 199, 99)
+    this.waterGeo.computeVertexNormals()
+    this.waterGeo.vertices = this.waterGeo.vertices.map(vert => {
+      return new THREE.Vector3(vert.x, vert.z, vert.y)
+    })
+    this.waterMesh = new THREE.Mesh(this.waterGeo, this.waterMaterial)
+
     // create lights
     this.envLight = new THREE.AmbientLight(0x303030)
     this.light = new THREE.DirectionalLight(0xffffff)
@@ -52,7 +66,7 @@ class Territory {
 
     // create renderer
     this.renderer = new THREE.WebGLRenderer({antialias: true})
-    console.log('Territory.js', 'this.width', 'this.height', this.width, this.height)
+    // console.log('Territory.js', 'this.width', 'this.height', this.width, this.height)
     this.renderer.setSize(this.width, this.height)
     // this.renderer.setClearColor(0xfffff7)
     this.renderer.setClearColor(0x000000)
@@ -67,6 +81,7 @@ class Territory {
     this.scene.add(this.envLight)
     this.scene.add(this.light)
     this.scene.add(this.terrainMesh)
+    this.scene.add(this.waterMesh)
     this.scene.add(this.cloud.particleGroup.mesh)
     this.scene.add(this.flow.particleGroup.mesh)
     this.camera.position.set(400, 400, 400)
