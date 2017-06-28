@@ -18,13 +18,13 @@ class AppStore {
 
   login(user, pass) {
       // TODO : login
-      this.state.user = {id: 1, name: user}
+      this.state.user = {id: 1, name: user, role: -1}
       if (user == 'admin') {
-          this.state.user["role"] = 0
+          this.state.user.role = 0
           this.state.position = 'project'
       }
       else {
-          this.state.user["role"] = 1
+          this.state.user.role = 1
       }
   }
 

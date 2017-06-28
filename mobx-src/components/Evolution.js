@@ -1,3 +1,5 @@
+import React from 'react'
+import {observer} from 'mobx-react'
 import _ from 'lodash'
 import * as THREE from 'three'
 import {Slider, Table, Tag, Button, Row, Col} from 'antd'
@@ -7,6 +9,8 @@ import Transect from './Transect'
 
 @observer class Evolution extends React.Component {
   constructor(store) {
+    super()
+    
     // member function
     this.dateFormatter = this.dateFormatter.bind(this)
     this.dateChangeHandler = this.dateChangeHandler.bind(this)

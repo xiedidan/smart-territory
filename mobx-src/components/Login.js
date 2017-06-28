@@ -1,3 +1,5 @@
+import React from 'react'
+import {observer} from 'mobx-react'
 import _ from 'lodash'
 import * as THREE from 'three'
 import {Form, Input, Icon, Checkbox, Button, Row, Col} from 'antd'
@@ -8,6 +10,8 @@ const FormItem = Form.Item
 
 @observer class Login extends React.Component {
   constructor() {
+    super()
+
     // member function
     this.hasErrors = this.hasErrors.bind(this)
     this.submitHandler = this.submitHandler.bind(this)
@@ -35,13 +39,13 @@ const FormItem = Form.Item
   }
 
   render() {
-    const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+    const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form
+
     // Only show error after a field is touched.
-    const userNameError = isFieldTouched('userName') && getFieldError('userName')
+    const usernameError = isFieldTouched('username') && getFieldError('username')
     const passwordError = isFieldTouched('password') && getFieldError('password')
 
-    return <div>
-      <Form onSubmit={this.handleSubmit} className="login-form">
+    return <Form onSubmit={this.submitHandler} className="login-form">
         <FormItem validateStatus={usernameError ? 'error' : ''} help={usernameError || ''} >
           {
             getFieldDecorator('username', { rules: [{ required: true, message: '输入用户名' }] }) (
@@ -66,8 +70,9 @@ const FormItem = Form.Item
           <Button type="primary" htmlType="submit" className="login-form-button" disabled={this.hasErrors(getFieldsError())}>登录</Button>
         </FormItem>
       </Form>
-    </div>
   }
 }
 
-export default Login
+const WrappedLoginForm = Form.create()(Login)
+
+export default WrappedLoginForm
