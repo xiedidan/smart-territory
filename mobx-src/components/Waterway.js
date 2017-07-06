@@ -4,20 +4,20 @@ import _ from 'lodash'
 import * as THREE from 'three'
 import {Modal, Table, Layout, Menu, Breadcrumb, Form, Input, Icon, Checkbox, Button, Row, Col} from 'antd'
 
-import ProjectForm from './ProjectForm'
-import ProjectStore from '../stores/ProjectStore'
+import WaterwayForm from './WaterwayForm'
+import WaterwayStore from '../stores/WaterwayStore'
 import constants from '../utilities/constants'
 
 const { SubMenu } = Menu
 const { Header, Content, Sider } = Layout
 
-@observer class Project extends React.Component {
+@observer class Waterway extends React.Component {
   constructor() {
     super()
 
     // data member
-    this.store = new ProjectStore()
-    this.store.loadProjectList()
+    this.store = new WaterwayStore()
+    this.store.loadWaterwayList()
 
     this.columns = [
         {
@@ -31,9 +31,14 @@ const { Header, Content, Sider } = Layout
             key: 'createTs'
         },
         {
+            title: '所属项目ID',
+            dataIndex: 'projectId',
+            key: 'projectId'
+        },
+        {
             title: '描述',
-            dataIndex: 'detail',
-            key: 'detail'
+            dataIndex: 'info',
+            key: 'info'
         },
         {
             title: '操作',
@@ -70,34 +75,35 @@ const { Header, Content, Sider } = Layout
   removeClickHandler(e) {
       let key = e.target.dataset['key']
 
-      this.store.removeProject(key)
+      this.store.removeWaterway(key)
   }
 
   render() {
     let modalTitle
     let modalShow = true
     if (this.store.state.operation == 'add') {
-        modalTitle = "添加工程"
+        modalTitle = "添加航道图"
     }
     else if (this.store.state.operation == 'update') {
-        modalTitle = "编辑工程"
+        modalTitle = "编辑航道图"
     }
     else {
         modalShow = false
     }
+    console.log(modalShow)
 
     return <div>
-        <Row><Button className="add-button" type="primary" onClick={this.addClickHandler} ><Icon type="plus-circle-o" /></Button></Row>
-        <Row><Table columns={this.columns} dataSource={this.store.state.projectList} /></Row>
+        <Row><Col><Button className="add-button" type="primary" onClick={this.addClickHandler} ><Icon type="plus-circle-o" /></Button></Col></Row>
+        <Row><Col><Table columns={this.columns} dataSource={this.store.state.waterwayList} /></Col></Row>
         <Modal
           title={modalTitle}
           visible={modalShow}
           closable={false}
           footer={null} >
-          <ProjectForm store={this.store} />
+          <WaterwayForm store={this.store} />
         </Modal>
     </div>
   }
 }
 
-export default Project
+export default Waterway

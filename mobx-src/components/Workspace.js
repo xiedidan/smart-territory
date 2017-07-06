@@ -7,6 +7,7 @@ import {Layout, Menu, Breadcrumb, Form, Input, Icon, Checkbox, Button, Row, Col}
 import constants from '../utilities/constants'
 import Project from './Project'
 import User from './User'
+import Waterway from './Waterway'
 
 const { SubMenu } = Menu
 const { Header, Content, Sider } = Layout
@@ -46,6 +47,10 @@ const { Header, Content, Sider } = Layout
         content = <User store={this.props.store} />
         break
 
+        case 'waterway':
+        content = <Waterway store={this.props.store} />
+        break
+
         default:
         content = <Project store={this.props.store} />
     }
@@ -53,9 +58,13 @@ const { Header, Content, Sider } = Layout
     return <div>
         <Layout>
             <Header className="Header">
-                <div className="Logo" />
-                <Button type="primary" onClick={this.navHandler}><Icon type="setting" />设置</Button>
-                <Button type="primary" onClick={this.navHandler}><Icon type="logout" />退出</Button>
+                <Row>
+                    <Col span={1} offset={0} ><div className="Logo" /></Col>
+                    <Col span={4} offset={19} >
+                        <Button type="primary" onClick={this.settingClickHandler} className="setting-button" ><Icon type="setting" />设置</Button>
+                        <Button type="primary" onClick={this.exitClickHandler} className="logout-button" ><Icon type="logout" />退出</Button>
+                    </Col>
+                </Row>
             </Header>
             <Layout>
                 <Sider width={200} style={{ background: '#fff' }}>
@@ -64,11 +73,10 @@ const { Header, Content, Sider } = Layout
                         style={{ height: '100%', borderRight: 0 }}
                         theme="dark"
                         onClick={this.menuClickHandler}
-                        selectedKeys={[this.props.store.state.position]}
-                    >
+                        selectedKeys={[this.props.store.state.position]} >
                         <Menu.Item key="project"><span><Icon type="appstore-o" />工程管理</span></Menu.Item>
                         <Menu.Item key="user"><span><Icon type="user" />用户管理</span></Menu.Item>
-                        <Menu.Item key="blueprint"><span><Icon type="picture" />航道图管理</span></Menu.Item>
+                        <Menu.Item key="waterway"><span><Icon type="picture" />航道图管理</span></Menu.Item>
                         <Menu.Item key="interface"><span><Icon type="code-o" />接口管理</span></Menu.Item>
                         <Menu.Item key="marker"><span><Icon type="environment-o" />航标管理</span></Menu.Item>
                         <Menu.Item key="hydrology"><span><Icon type="line-chart" />水文管理</span></Menu.Item>

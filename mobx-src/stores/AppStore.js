@@ -40,7 +40,28 @@ class AppStore {
   }
 
   toggleLayer(name) {
+      let existKey = this.state.layers.filter(value => {
+          if (value == name) {
+              return true
+          }
+          else {
+              return false
+          }
+      })
 
+      if (existKey.length == 0) {
+          this.state.layers.push(name)
+      }
+      else {
+          this.state.layers = this.state.layers.filter(value => {
+              if (value == name) {
+                  return false
+              }
+              else {
+                  return true
+              }
+          })
+      }
   }
 
 }

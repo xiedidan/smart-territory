@@ -27,7 +27,6 @@ const { Header, Content, Sider } = Layout
   componentDidMount() {
     let width = this.rendererContainer.clientWidth
     let height = this.rendererContainer.clientHeight
-    console.log(this.rendererContainer, width, height)
 
     this.territoryStore = new TerritoryStore()
     this.territory = new Territory(this.territoryStore, width, height)
@@ -36,7 +35,7 @@ const { Header, Content, Sider } = Layout
   }
 
   // helper
-  exitClickHandler() {
+  evoClickHandler() {
       // TODO : show evolution modal
   }
 
@@ -46,15 +45,20 @@ const { Header, Content, Sider } = Layout
 
   menuClickHandler(e) {
       this.props.store.toggleLayer(e.key)
+      this.territoryStore.toggleSwitch(e.key)
   }
 
   render() {
     return <div>
         <Layout>
             <Header className="Header">
-                <div className="Logo" />
-                <Button type="primary" onClick={this.evoClickHandler}><Icon type="line-chart" />河床演变</Button>
-                <Button type="primary" onClick={this.exitClickHandler}><Icon type="logout" />退出</Button>
+                <Row>
+                    <Col span={1} offset={0} ><div className="Logo" /></Col>
+                    <Col span={4} offset={19} >
+                        <Button type="primary" onClick={this.evoClickHandler} className="setting-button" ><Icon type="line-chart" />河床演变</Button>
+                        <Button type="primary" onClick={this.exitClickHandler} className="logout-button" ><Icon type="logout" />退出</Button>
+                    </Col>
+                </Row>
             </Header>
             <Layout>
                 <Sider width={200} style={{ background: '#fff' }}>
@@ -64,8 +68,7 @@ const { Header, Content, Sider } = Layout
                         multiple={true}
                         style={{ height: '100%', borderRight: 0 }}
                         onClick={this.menuClickHandler}
-                        selectedKeys={this.props.store.state.layers}
-                    >
+                        selectedKeys={this.props.store.state.layers} >
                         <Menu.Item key="marker"><Icon type="environment-o" />航标</Menu.Item>
                         <Menu.Item key="hydrology"><Icon type="line-chart" />水文</Menu.Item>
                         <Menu.Item key="fog"><Icon type="eye-o" />雾情</Menu.Item>
@@ -75,7 +78,7 @@ const { Header, Content, Sider } = Layout
                 </Sider>
                 <Layout style={{ padding: '24px 24px 24px 24px' }}>
                     <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
-                        <div style={{minHeight: 280}} ref={(content) => {this.rendererContainer = content}} />
+                        <div style={{ minHeight: 680 }} ref={(content) => {this.rendererContainer = content}} />
                     </Content>
                 </Layout>
             </Layout>

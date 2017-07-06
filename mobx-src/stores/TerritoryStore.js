@@ -4,14 +4,24 @@ import Mobx from 'mobx'
 class TerritoryStore {
   @observable state = {
     lightSwitch: true,
+    mark: false,
+    hydrology: false,
+    fog: false,
+    meteorology: false,
+    ship: false,
     rotateAngle: 0.0
   }
   rotateFlag = false
 
   constructor() {
+    this.toggleSwitch = this.toggleSwitch.bind(this)
     this.toggleLight = this.toggleLight.bind(this)
     this.toggleRotate = this.toggleRotate.bind(this)
     this.update = this.update.bind(this)
+  }
+
+  toggleSwitch(key) {
+    this.state[key] = this.state[key] ? false : true
   }
 
   // light

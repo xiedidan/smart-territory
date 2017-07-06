@@ -5,7 +5,10 @@ import TriangleBuilder from './TriangleBuilder'
 import Cloud from './Cloud'
 import Flow from './Flow'
 
-import territoryData from './data/test-model-1'
+import territoryData from './data/test-model-2'
+
+const cloudMeshName = "cloudMesh"
+const flowMeshName = "flowMesh"
 
 class Territory {
   constructor(store, width, height) {
@@ -42,13 +45,15 @@ class Territory {
 
     // create terrain
     this.builder = new TriangleBuilder(territoryData)
+    this.builder.normalize()
+    this.builder.setWindow(50)
     this.planeGeo = this.builder.build()
     this.planeGeo.computeVertexNormals()
 
     this.terrainMesh = new THREE.Mesh(this.planeGeo, this.phongMaterial) 
     // this.boxMesh = new THREE.Mesh(new THREE.BoxGeometry(400, 400, 400), this.phongMaterial)
 
-    this.waterGeo = new THREE.PlaneGeometry(1200, 1000, 199, 99)
+    this.waterGeo = new THREE.PlaneGeometry(12000, 10000, 199, 99)
     this.waterGeo.computeVertexNormals()
     this.waterGeo.vertices = this.waterGeo.vertices.map(vert => {
       return new THREE.Vector3(vert.x, vert.z, vert.y)
@@ -82,16 +87,54 @@ class Territory {
     this.scene.add(this.light)
     this.scene.add(this.terrainMesh)
     this.scene.add(this.waterMesh)
-    this.scene.add(this.cloud.particleGroup.mesh)
-    this.scene.add(this.flow.particleGroup.mesh)
-    this.camera.position.set(400, 400, 400)
-    this.camera.lookAt(new THREE.Vector3(0, -300, 0))
-    // this.scene.fog = new THREE.Fog(0x0f0f0f, 0.1, 5000)
+
+    if (this.store.state.meteorology) {
+      let cloudMesh = this.cloud.particleGroup.mesh
+      cloudMesh.name = cloudMeshName
+      this.scene.add(cloudMesh)
+    }
+    if (this.store.state.hydrology) {
+      let flowMesh = this.flow.particleGroup.mesh
+      flowMesh.name = flowMeshName
+      this.scene.add(flowMesh)
+    }
+
+    this.camera.position.set(1200, 1200, 1200)
+    this.camera.lookAt(new THREE.Vector3(0, -400, 0))
+    this.scene.fog = new THREE.Fog(0xffffff, 0.3, 10000)
 
     setTimeout(this.animate, 0) 
   }
 
   animate() {
+    if (this.store.state.meteorology) {
+      if (this.scene.getObjectByName(cloudMeshName) === undefined || this.scene.getObjectByName(cloudMeshName) == null) { 
+        let cloudMesh = this.cloud.particleGroup.mesh
+        cloudMesh.name = cloudMeshName
+        this.scene.add(cloudMesh)
+      }
+    }
+    else {
+      if (this.scene.getObjectByName(cloudMeshName) !== undefined && this.scene.getObjectByName(cloudMeshName) != null) { 
+        let cloudMesh = this.scene.getObjectByName(cloudMeshName)
+        this.scene.remove(cloudMesh)
+      }
+    }
+
+    if (this.store.state.hydrology) {
+      if (this.scene.getObjectByName(flowMeshName) === undefined || this.scene.getObjectByName(flowMeshName) == null) {
+        let flowMesh = this.flow.particleGroup.mesh
+        flowMesh.name = flowMeshName
+        this.scene.add(flowMesh)
+      }
+    }
+    else {
+      if (this.scene.getObjectByName(flowMeshName) !== undefined && this.scene.getObjectByName(flowMeshName) != null) {
+        let flowMesh = this.scene.getObjectByName(flowMeshName)
+        this.scene.remove(flowMesh)
+      }
+    }
+
     requestAnimationFrame(this.animate)
 
     let dt = this.clock.getDelta()
