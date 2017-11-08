@@ -88,4 +88,7 @@ a {
 .ant-row.ant-form-item  {
   border-radius:50px;
 }
+.select-button {
+  margin-right: 6px;
+}
 

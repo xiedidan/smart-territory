@@ -7,6 +7,7 @@ class AppStore {
   @observable state = {
     user: {id: -1},
     position: 'project',
+    operation: '',
     layers: []
   }
 
@@ -62,6 +63,10 @@ class AppStore {
               }
           })
       }
+  }
+
+  operate(name) {
+      this.state.operation = name
   }
 
 }

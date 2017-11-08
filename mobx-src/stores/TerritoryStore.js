@@ -5,7 +5,7 @@ class TerritoryStore {
   @observable state = {
     lightSwitch: true,
     mark: false,
-    hydrology: false,
+    hydrology: true,
     fog: false,
     meteorology: false,
     ship: false,

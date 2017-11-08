@@ -2,7 +2,7 @@ import React from 'react'
 import {observer} from 'mobx-react'
 import _ from 'lodash'
 import * as THREE from 'three'
-import {Layout, Menu, Breadcrumb, Form, Input, Icon, Checkbox, Button, Row, Col} from 'antd'
+import {Table, Modal, Layout, Menu, Breadcrumb, Form, Input, Icon, Checkbox, Button, Row, Col} from 'antd'
 
 import constants from '../utilities/constants'
 
@@ -19,6 +19,13 @@ const { Header, Content, Sider } = Layout
     // member function
     this.exitClickHandler = this.exitClickHandler.bind(this)
     this.menuClickHandler = this.menuClickHandler.bind(this)
+
+    this.selectClickHandler = this.selectClickHandler.bind(this)
+    this.selectOkHandler = this.selectOkHandler.bind(this)
+    this.selectCancelHandler = this.selectCancelHandler.bind(this)
+
+    this.evolutionClickHandler = this.evolutionClickHandler.bind(this)
+
     this.componentDidMount = this.componentDidMount.bind(this)
     this.render = this.render.bind(this)
   }
@@ -35,8 +42,20 @@ const { Header, Content, Sider } = Layout
   }
 
   // helper
-  evoClickHandler() {
-      // TODO : show evolution modal
+  selectClickHandler() {
+      this.props.store.operate('select')
+  }
+
+  selectOkHandler() {
+      this.props.store.operate('')
+  }
+
+  selectCancelHandler() {
+      this.props.store.operate('')
+  }
+
+  evolutionClickHandler() {
+      this.props.store.operate('evolution')
   }
 
   exitClickHandler() {
@@ -49,13 +68,15 @@ const { Header, Content, Sider } = Layout
   }
 
   render() {
+    let selectModalShow = (this.props.store.state.operation == 'select') ? true : false
+                        // <Button type="primary" onClick={this.selectClickHandler} className="select-button" ><Icon type="picture" />航道图选择</Button>
     return <div>
         <Layout>
             <Header className="Header">
                 <Row>
                     <Col span={1} offset={0} ><div className="Logo" /></Col>
-                    <Col span={4} offset={19} >
-                        <Button type="primary" onClick={this.evoClickHandler} className="setting-button" ><Icon type="line-chart" />河床演变</Button>
+                    <Col span={4} offset={15} >
+                        <Button type="primary" onClick={this.evolutionClickHandler} className="evolution-button" ><Icon type="line-chart" />河床演变</Button>
                         <Button type="primary" onClick={this.exitClickHandler} className="logout-button" ><Icon type="logout" />退出</Button>
                     </Col>
                 </Row>
@@ -83,6 +104,13 @@ const { Header, Content, Sider } = Layout
                 </Layout>
             </Layout>
         </Layout>
+        <Modal
+          title="选择航道图"
+          visible={selectModalShow}
+          onOk={this.selectOkHandler}
+          onCancel={this.selectCancelHandler}
+          >
+        </Modal>
     </div>
   }
 }

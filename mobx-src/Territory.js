@@ -7,6 +7,7 @@ import Flow from './Flow'
 
 import territoryData from './data/test-model-2'
 
+const waterMeshName = "waterMesh"
 const cloudMeshName = "cloudMesh"
 const flowMeshName = "flowMesh"
 
@@ -86,6 +87,8 @@ class Territory {
     this.scene.add(this.envLight)
     this.scene.add(this.light)
     this.scene.add(this.terrainMesh)
+
+    this.waterMesh.name = waterMeshName
     this.scene.add(this.waterMesh)
 
     if (this.store.state.meteorology) {
@@ -96,7 +99,7 @@ class Territory {
     if (this.store.state.hydrology) {
       let flowMesh = this.flow.particleGroup.mesh
       flowMesh.name = flowMeshName
-      this.scene.add(flowMesh)
+      // this.scene.add(flowMesh)
     }
 
     this.camera.position.set(1200, 1200, 1200)
@@ -122,16 +125,16 @@ class Territory {
     }
 
     if (this.store.state.hydrology) {
-      if (this.scene.getObjectByName(flowMeshName) === undefined || this.scene.getObjectByName(flowMeshName) == null) {
-        let flowMesh = this.flow.particleGroup.mesh
-        flowMesh.name = flowMeshName
-        this.scene.add(flowMesh)
+      if (this.scene.getObjectByName(waterMeshName) === undefined || this.scene.getObjectByName(waterMeshName) == null) {
+        let waterMesh = this.waterMesh
+        waterMesh.name = waterMeshName
+        this.scene.add(waterMesh)
       }
     }
     else {
-      if (this.scene.getObjectByName(flowMeshName) !== undefined && this.scene.getObjectByName(flowMeshName) != null) {
-        let flowMesh = this.scene.getObjectByName(flowMeshName)
-        this.scene.remove(flowMesh)
+      if (this.scene.getObjectByName(waterMeshName) !== undefined && this.scene.getObjectByName(waterMeshName) != null) {
+        let waterMesh = this.scene.getObjectByName(waterMeshName)
+        this.scene.remove(waterMesh)
       }
     }
 
