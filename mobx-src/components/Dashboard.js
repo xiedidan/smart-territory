@@ -43,32 +43,32 @@ const { Header, Content, Sider } = Layout
 
   // helper
   selectClickHandler() {
-      this.props.store.operate('select')
+      this.props.store.appStore.operate('select')
   }
 
   selectOkHandler() {
-      this.props.store.operate('')
+      this.props.store.appStore.operate('')
   }
 
   selectCancelHandler() {
-      this.props.store.operate('')
+      this.props.store.appStore.operate('')
   }
 
   evolutionClickHandler() {
-      this.props.store.operate('evolution')
+      this.props.store.appStore.operate('evolution')
   }
 
   exitClickHandler() {
-      this.props.store.nav('exit')
+      this.props.store.appStore.nav('exit')
   }
 
   menuClickHandler(e) {
-      this.props.store.toggleLayer(e.key)
-      this.territoryStore.toggleSwitch(e.key)
+      this.props.store.appStore.toggleLayer(e.key)
+      this.territorystore.appStore.toggleSwitch(e.key)
   }
 
   render() {
-    let selectModalShow = (this.props.store.state.operation == 'select') ? true : false
+    let selectModalShow = (this.props.store.appStore.state.operation == 'select') ? true : false
                         // <Button type="primary" onClick={this.selectClickHandler} className="select-button" ><Icon type="picture" />航道图选择</Button>
     return <div>
         <Layout>
@@ -89,7 +89,7 @@ const { Header, Content, Sider } = Layout
                         multiple={true}
                         style={{ height: '100%', borderRight: 0 }}
                         onClick={this.menuClickHandler}
-                        selectedKeys={this.props.store.state.layers} >
+                        selectedKeys={this.props.store.appStore.state.layers} >
                         <Menu.Item key="marker"><Icon type="environment-o" />航标</Menu.Item>
                         <Menu.Item key="hydrology"><Icon type="line-chart" />水文</Menu.Item>
                         <Menu.Item key="fog"><Icon type="eye-o" />雾情</Menu.Item>

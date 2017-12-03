@@ -19,16 +19,7 @@ process.on('uncaughtException', function(err) {
 
 // compiling tasks
 gulp.task('build', sequence('clean', 'compile'))
-gulp.task('compile', ['compile-express', 'compile-routes', 'compile-mobx'])
-
-gulp.task('compile-express', () => {
-  return gulp.src('express-src/**/*.js')
-    .pipe(babel({
-      presets: ['es2015'],
-      plugins: ['transform-runtime']
-    }))
-    .pipe(gulp.dest('express-dist'))
-})
+gulp.task('compile', ['compile-routes', 'compile-mobx'])
 
 gulp.task('compile-routes', () => {
   return gulp.src('routes-src/**/*.js')
@@ -64,12 +55,7 @@ gulp.task('compile-mobx', () => {
 })
 
 // cleaning tasks
-gulp.task('clean', ['clean-express', 'clean-routes', 'clean-mobx'])
-
-gulp.task('clean-express', () => {
-  return gulp.src('express-dist/**/*.js', {read: false})
-    .pipe(clean())
-})
+gulp.task('clean', ['clean-routes', 'clean-mobx'])
 
 gulp.task('clean-routes', () => {
   return gulp.src('routes/**/*.js', {read: false})

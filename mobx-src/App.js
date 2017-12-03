@@ -14,14 +14,16 @@ import Dashboard from './components/Dashboard'
 
   render() {
     let page
-    if (this.props.store.state.user.id == -1) {
+    if (this.props.store.appStore.state.user.id == -1) {
       page = <WrappedLoginForm store={this.props.store} />
     }
     else {
-      if (this.props.store.state.user.role == 0) {
+      if (this.props.store.appStore.state.user.role == 0) {
+        // admin
         page = <Workspace store={this.props.store} />
       }
       else {
+        // normal user
         page = <Dashboard store={this.props.store} />
       }
     }
