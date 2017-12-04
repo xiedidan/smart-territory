@@ -1,3 +1,3 @@
-import Tile from './tile.controller'
+import * as tile from './tile.controller'
 
-export default { ...Tile }
+export default { ...tile }
