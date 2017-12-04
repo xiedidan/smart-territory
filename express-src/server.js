@@ -4,15 +4,16 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('./app');
 var debug = require('debug')('smart-territory-demo:server');
 var http = require('http');
+import config from './config'
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(config.port || '5000');
 app.set('port', port);
 
 /**

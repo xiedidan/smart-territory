@@ -19,15 +19,15 @@ process.on('uncaughtException', function(err) {
 
 // compiling tasks
 gulp.task('build', sequence('clean', 'compile'))
-gulp.task('compile', ['compile-routes', 'compile-mobx'])
+gulp.task('compile', ['compile-express', 'compile-mobx'])
 
-gulp.task('compile-routes', () => {
-  return gulp.src('routes-src/**/*.js')
+gulp.task('compile-express', () => {
+  return gulp.src('express-src/**/*.js')
     .pipe(babel({
       presets: ['es2015'],
       plugins: ['transform-runtime']
     }))
-    .pipe(gulp.dest('routes'))
+    .pipe(gulp.dest('express-dist'))
 })
 
 gulp.task('compile-mobx', () => {
@@ -55,10 +55,10 @@ gulp.task('compile-mobx', () => {
 })
 
 // cleaning tasks
-gulp.task('clean', ['clean-routes', 'clean-mobx'])
+gulp.task('clean', ['clean-express', 'clean-mobx'])
 
-gulp.task('clean-routes', () => {
-  return gulp.src('routes/**/*.js', {read: false})
+gulp.task('clean-express', () => {
+  return gulp.src('express-dist/**/*.js', {read: false})
     .pipe(clean())
 })
 
@@ -69,7 +69,7 @@ gulp.task('clean-mobx', () => {
 
 // watching tasks
 gulp.task('watch', () => {
-  let watcher = gulp.watch(['express-src/**/*.js', 'routes-src/**/*.js', 'mobx-src/**/*.js'], (event) => {
+  let watcher = gulp.watch(['express-src/**/*.js', 'mobx-src/**/*.js'], (event) => {
     sequence('clean', 'compile')(err => {
       if (err)
         console.log('*** Watcher - Error ***', err)
