@@ -1,4 +1,4 @@
-import mongodbConnection from '../utils/mongodb'
+import mongodbConnection from '../../utils/mongodb'
 import { TILE_COLLECTION } from '../../consts'
 
 /*

@@ -18,65 +18,72 @@ process.on('uncaughtException', function(err) {
 })
 
 // compiling tasks
-gulp.task('build', sequence('clean', 'compile'))
+gulp.task('build', sequence('clean', 'compile', 'copy-static'))
+
+gulp.task('copy-static', () => {
+    return gulp.src('express-src/public/**/*')
+        .pipe(gulp.dest('express-dist/public'))
+})
+
 gulp.task('compile', ['compile-express', 'compile-mobx'])
 
 gulp.task('compile-express', () => {
-  return gulp.src('express-src/**/*.js')
-    .pipe(babel({
-      presets: ['es2015'],
-      plugins: ['transform-runtime']
-    }))
-    .pipe(gulp.dest('express-dist'))
+    return gulp.src('express-src/**/*.js')
+        .pipe(babel({
+            presets: ['es2015'],
+            plugins: ['transform-runtime']
+        }))
+        .pipe(gulp.dest('express-dist'))
 })
 
 gulp.task('compile-mobx', () => {
-  let bundler = browserify({
-    entries: ['./mobx-src/Entry.js'],
-    debug: true
-  })
-
-  return bundler
-    .transform(babelify, {
-      presets: ["es2015", "react"],
-      plugins: [
-        'transform-decorators-legacy',
-        'transform-runtime',
-        'transform-class-properties',
-        ['import', { libraryName: 'antd' }]
-      ]
+    const bundler = browserify({
+        entries: ['./mobx-src/Entry.js'],
+        debug: true
     })
-    .bundle()
-    .pipe(source('./mobx-src/Entry.js'))
-    .pipe(buffer())
-    .pipe(uglify())
-    .pipe(rename({dirname: ''}))
-    .pipe(gulp.dest('./public/javascripts/mobx-dist/'))
+
+    return bundler
+        .transform(babelify, {
+            presets: ['es2015', 'react'],
+            plugins: [
+                'transform-decorators-legacy',
+                'transform-runtime',
+                'transform-class-properties',
+                ['import', { libraryName: 'antd' }]
+            ]
+        })
+        .bundle()
+        .pipe(source('./mobx-src/Entry.js'))
+        .pipe(buffer())
+        // .pipe(uglify())
+        .pipe(rename({dirname: ''}))
+        .pipe(gulp.dest('./express-src/public/javascripts/mobx-dist/'))
 })
 
 // cleaning tasks
 gulp.task('clean', ['clean-express', 'clean-mobx'])
 
 gulp.task('clean-express', () => {
-  return gulp.src('express-dist/**/*.js', {read: false})
-    .pipe(clean())
+    return gulp.src('express-dist/*', { read: false })
+        .pipe(clean())
 })
 
 gulp.task('clean-mobx', () => {
-  return gulp.src('public/javascripts/mobx-dist/**/*.js', {read: false})
-    .pipe(clean())
+    return gulp.src('express-src/public/javascripts/mobx-dist/**/*.js', { read: false })
+        .pipe(clean())
 })
 
 // watching tasks
-gulp.task('watch', () => {
-  let watcher = gulp.watch(['express-src/**/*.js', 'mobx-src/**/*.js'], (event) => {
-    sequence('clean', 'compile')(err => {
-      if (err)
-        console.log('*** Watcher - Error ***', err)
+gulp.task('watch', ['build'], () => {
+    const watcher = gulp.watch(['mobx-src/**/*.js'], (event) => {
+        sequence('clean-mobx', 'compile-mobx')((err) => {
+            if (err) {
+                console.log('*** Watcher - Error ***', err)
+            }
+        })
     })
-  })
 
-  watcher.on('change', event => {
-    console.log('*** Watcher - File ' + event.path + ' was ' + event.type + ', compiling... ***')
-  })
+    watcher.on('change', (event) => {
+        console.log(`*** Watcher - File ${event.path} was ${event.type} compiling... ***`)
+    })
 })

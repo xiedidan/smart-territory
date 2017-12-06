@@ -40,6 +40,6 @@ jspm_packages
 .vscode
 
 # outputs
-public/javascripts/mobx-dist
+express-src/public/javascripts/mobx-dist
 routes
 express-dist

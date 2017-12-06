@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 module.exports = {
     port: process.env.ST_PORT_DEV,
     mongoURL: process.env.ST_MONGO_URL_DEV,

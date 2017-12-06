@@ -1,9 +1,9 @@
 import Promise from 'bluebird'
-import { mongoClient } from 'mongodb'
+import { MongoClient } from 'mongodb'
 
-import config from './config'
+import config from '../config'
 
-const mongodbConnection = mongoClient.connect(config.mongoURL, {
+const mongodbConnection = MongoClient.connect(config.mongoURL, {
     promiseLibrary: Promise
 })
 

@@ -1,7 +1,5 @@
 import React from 'react'
 import {observer} from 'mobx-react'
-import _ from 'lodash'
-import * as THREE from 'three'
 import {Form, Input, Icon, Checkbox, Button, Row, Col} from 'antd'
 
 import constants from '../utilities/constants'
@@ -33,7 +31,7 @@ const FormItem = Form.Item
       e.preventDefault()
       this.props.form.validateFields((err, values) => {
           if (!err) {
-              this.props.store.login(values["username"], values["password"])
+              this.props.store.appStore.login(values["username"], values["password"])
           }
       })
   }

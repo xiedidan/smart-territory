@@ -1,12 +1,9 @@
 import React from 'react'
 import {observer} from 'mobx-react'
-import _ from 'lodash'
-import * as THREE from 'three'
 import {Layout, Menu, Breadcrumb, Form, Input, Icon, Checkbox, Button, Row, Col} from 'antd'
 
 import constants from '../utilities/constants'
 import Project from './Project'
-import User from './User'
 import Waterway from './Waterway'
 
 const { SubMenu } = Menu

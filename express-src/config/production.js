@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 module.exports = {
     port: process.env.TW_PORT,
     mongoURL: process.env.TW_MONGO_URL,

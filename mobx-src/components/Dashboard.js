@@ -1,13 +1,9 @@
 import React from 'react'
 import {observer} from 'mobx-react'
-import _ from 'lodash'
-import * as THREE from 'three'
 import {Table, Modal, Layout, Menu, Breadcrumb, Form, Input, Icon, Checkbox, Button, Row, Col} from 'antd'
+import CesiumViewer from './CesiumViewer'
 
 import constants from '../utilities/constants'
-
-import TerritoryStore from '../stores/TerritoryStore'
-import Territory from '../Territory'
 
 const { SubMenu } = Menu
 const { Header, Content, Sider } = Layout
@@ -32,13 +28,6 @@ const { Header, Content, Sider } = Layout
 
   // lifecycle
   componentDidMount() {
-    let width = this.rendererContainer.clientWidth
-    let height = this.rendererContainer.clientHeight
-
-    this.territoryStore = new TerritoryStore()
-    this.territory = new Territory(this.territoryStore, width, height)
-
-    this.rendererContainer.appendChild(this.territory.rendererDom)
   }
 
   // helper
@@ -70,8 +59,8 @@ const { Header, Content, Sider } = Layout
   render() {
     let selectModalShow = (this.props.store.appStore.state.operation == 'select') ? true : false
                         // <Button type="primary" onClick={this.selectClickHandler} className="select-button" ><Icon type="picture" />航道图选择</Button>
-    return <div>
-        <Layout>
+    return <div className="full-height">
+        <Layout className="full-height">
             <Header className="Header">
                 <Row>
                     <Col span={1} offset={0} ><div className="Logo" /></Col>
@@ -97,20 +86,20 @@ const { Header, Content, Sider } = Layout
                         <Menu.Item key="ship"><Icon type="share-alt" />船舶</Menu.Item>                        
                     </Menu>
                 </Sider>
-                <Layout style={{ padding: '24px 24px 24px 24px' }}>
-                    <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
-                        <div style={{ minHeight: 680 }} ref={(content) => {this.rendererContainer = content}} />
+                <Layout>
+                    <Content style={{ background: '#fff', padding: 0, margin: 0, minHeight: 280 }}>
+                        <CesiumViewer />
                     </Content>
                 </Layout>
             </Layout>
-        </Layout>
-        <Modal
+            <Modal
           title="选择航道图"
           visible={selectModalShow}
           onOk={this.selectOkHandler}
           onCancel={this.selectCancelHandler}
           >
         </Modal>
+        </Layout>
     </div>
   }
 }

@@ -43,10 +43,11 @@ const fragmentShader = 'uniform sampler2D oceanTexture; \
     }'
 
 class Tile {
-    constructor(paths, scene, camera) {
+    constructor(paths, scene, camera, renderer) {
         this.paths = paths
         this.scene = scene
         this.camera = camera
+        this.renderer = renderer
         this.textureLoader = new THREE.TextureLoader()
         this.lods = []
 
@@ -65,14 +66,16 @@ class Tile {
         this.update = this.update.bind(this)
         this.loadTexture = this.loadTexture.bind(this)
         this.loadTileInfo = this.loadTileInfo.bind(this)
+        this.getCameraDistance = this.getCameraDistance.bind(this)
     }
 
-    load(tileInfo) {
+    load() {
         const that = this
+        const cameraDistance = this.getCameraDistance()
 
         return this.loadTileInfo().then((tileInfo) => {
             that.tileInfo = tileInfo
-            return this.getTextureUniform.bind(this)
+            return that.getTextureUniform.bind(that)
         }).then(() => {
             return Promise.mapSeries(this.tileInfo.tiles, (tile) => {
                 return this.loadTexture(`${this.paths.heightMap}/${tile.filename}`)
@@ -86,7 +89,7 @@ class Tile {
                     const levelUniforms = {
                         heightMap: tileHeightMap,
                         heightScale: level.heightScale,
-                        level: level,
+                        level,
                         ...this.textureUniform
                     }
 
@@ -99,23 +102,26 @@ class Tile {
                     const levelGeometry = new THREE.PlaneGeometry(
                         tile.geometry.width,
                         tile.geometry.height,
-                        tile.segment.x / Math.pow(2, level),
-                        tile.segment.y / Math.pow(2, level)
+                        tile.segment.x / (2 ** level),
+                        tile.segment.y / (2 ** level)
                     )
 
                     const levelMesh = new THREE.Mesh(levelGeometry, levelMaterial)
                     levelMesh.position.x = tile.position.x
                     levelMesh.position.y = tile.position.y
 
-                    lod.addLevel(levelMesh, level.distance)
+                    lod.addLevel(levelMesh, cameraDistance * (2 ** level))
                 }
 
                 this.lods.push(lod)
                 this.scene.add(lod)
+
+                return lod
             })
-        }).catch((err) => {
-            console.log('Tile::load() Error', err)
         })
+            .catch((err) => {
+                console.log('Tile::load() Error', err)
+            })
     }
 
     update() {
@@ -131,7 +137,7 @@ class Tile {
                 if (texture instanceof THREE.Texture) {
                     resolve(texture)
                 } else {
-                    reject(new Error('Texture loading failed. Filename' + filename))
+                    reject(new Error(`Texture loading failed. Filename: ${filename}`))
                 }
             })
         })
@@ -143,16 +149,22 @@ class Tile {
         return fetch(`${this.paths.info}`).then((res) => {
             if (res.ok) {
                 return res.json()
-            } else {
-                console.log('Tile::loadTileInfo() WebService Error')
-                return null
             }
+
+            console.log('Tile::loadTileInfo() WebService Error')
+            return null
         }).then((info) => {
             that.tileInfo = info
             return Promise.resolve(info)
         }).catch((err) => {
             console.log('Tile::loadTileInfo() Error', err.message)
         })
+    }
+
+    getCameraDistance() {
+        const vFov = this.camera.fov * (Math.PI / 180)
+        const distance = (this.renderer.getSize().height / 2) / Math.tan(vFov / 2)
+        return distance
     }
 
 }
